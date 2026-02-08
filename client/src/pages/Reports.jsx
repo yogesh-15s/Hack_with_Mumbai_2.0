@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { FileText, ChevronRight, Upload } from 'lucide-react';
-import { getRecords } from '../services/api';
+import { getRecords, FILE_BASE_URL } from '../services/api';
 
 const Reports = () => {
     const [records, setRecords] = useState([]);
@@ -50,7 +50,7 @@ const Reports = () => {
                         {records.map((record) => (
                             <a
                                 key={record.id}
-                                href={`http://localhost:5001${record.fileUrl}`}
+                                href={`${FILE_BASE_URL}${record.fileUrl}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group block bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-200"
