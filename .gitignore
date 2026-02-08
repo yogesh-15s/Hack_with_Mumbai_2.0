@@ -20,6 +20,9 @@ dist/
 # Database
 prisma/dev.db
 prisma/dev.db-journal
+server/prisma/dev.db
+server/prisma/dev.db-journal
+push_error.txt
 
 # Logs
 npm-debug.log*
