@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const recordRoutes = require('./routes/records');
 const usersRoutes = require('./routes/users');
 
+const path = require('path');
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
@@ -16,13 +17,20 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads')); // Serve uploaded files statically
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/records', recordRoutes);
 app.use('/api/users', usersRoutes);
 
-app.get('/', (req, res) => {
-  res.send('MedVault API is running');
+// Serve Frontend
+app.use(express.static(path.join(__dirname, '../../client/dist')));
+
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+  } else {
+    res.status(404).json({ error: 'API route not found' });
+  }
 });
 
 app.listen(PORT, () => {
