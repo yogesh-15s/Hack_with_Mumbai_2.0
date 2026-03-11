@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -15,11 +15,16 @@ model User {
   email     String   @unique
   password  String
   name        String?
+  role        String   @default("patient")
   age         Int?
   bloodGroup  String?
   weight      String?
   height      String?
   gender      String?
+  avatar      String?
+  emergencyContactName     String?
+  emergencyContactPhone    String?
+  emergencyContactRelation String?
   records     MedicalRecord[]
 }
 

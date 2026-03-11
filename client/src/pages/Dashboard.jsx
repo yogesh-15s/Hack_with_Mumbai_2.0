@@ -3,8 +3,10 @@ import Layout from '../components/Layout';
 import BodyModel from '../components/BodyModel';
 import { Upload, Plus, Activity, Thermometer, Pill, FileText, X, ChevronRight, Trash2 } from 'lucide-react';
 import { getRecords, createRecord, deleteRecord } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
+    const { user } = useAuth();
     const [selectedPart, setSelectedPart] = useState(null);
     const [records, setRecords] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -95,7 +97,6 @@ const Dashboard = () => {
             console.error('Failed to create record', error);
         }
     };
-
     const getPartInsights = (partName) => {
         const insights = {
             'Head & Neck': { tips: ['Maintain eye level with screens', 'Perform neck stretches hourly'], info: 'Contains primary sensory organs and cervical spine.' },
@@ -123,7 +124,7 @@ const Dashboard = () => {
     const renderReportItem = (record) => {
         const content = (
             <div className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-750 transition-colors group">
-                <div className="p-2 bg-blue-50 dark:bg-blue-900/40 text-blue-500 rounded-lg">
+                <div className="p-2 bg-blue-50 dark:bg-blue-900/40 text-primary rounded-lg">
                     <FileText size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -158,240 +159,205 @@ const Dashboard = () => {
 
     return (
         <Layout>
-            <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-120px)] overflow-y-auto lg:overflow-hidden p-2 sm:p-0">
-                {/* Left Column: Actions & Files (4 cols) */}
-                <div className="w-full lg:w-[500px] flex-shrink-0 space-y-6 sm:space-y-8 animate-slide-up lg:overflow-y-auto lg:pr-2 custom-scrollbar" style={{ animationDelay: '0.1s' }}>
-                    <section>
-                        <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">Quick Actions</h2>
-                        <div className="grid grid-cols-1 gap-4">
+            <div className="flex flex-col lg:flex-row gap-8 h-full max-w-[1600px] mx-auto">
+                {/* Left Column: Intelligence & History */}
+                <div className="w-full lg:w-[420px] flex flex-col gap-10 animate-slide-up">
+                    {/* Architectural Brand Header */}
+                    <div className="px-2">
+                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-2">Vault Operator</p>
+                        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
+                            {user?.name?.split(' ')[0] || 'User'}
+                        </h2>
+                    </div>
+
+                    {/* Biometric Integration (Quick Stats) */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="p-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2.5rem] shadow-2xl shadow-slate-900/10 transition-transform hover:scale-[1.02] cursor-default">
+                            <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 mb-3">System Integrity</p>
+                            <div className="flex items-end gap-2">
+                                <span className="text-4xl font-black leading-none italic">98%</span>
+                                <Activity size={18} className="mb-1 text-blue-400" />
+                            </div>
+                        </div>
+                        <div className="p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2.5rem] shadow-xl transition-transform hover:scale-[1.02] cursor-default">
+                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Archive Depth</p>
+                            <div className="flex items-end gap-2">
+                                <span className="text-4xl font-black leading-none italic dark:text-white">{records.length}</span>
+                                <FileText size={18} className="mb-1 text-primary" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Operational Commands */}
+                    <div className="space-y-4">
+                        <h3 className="text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-[0.3em] px-2">Operational Commands</h3>
+                        <div className="flex gap-4">
                             <button
                                 onClick={() => handleOpenModal('Report')}
-                                className="w-full flex items-center gap-6 py-7 px-6 bg-white dark:bg-[#0f172a]/40 border border-blue-500/10 dark:border-white/5 rounded-[2.5rem] hover:shadow-2xl hover:scale-[1.02] transition-all group overflow-hidden relative"
+                                className="flex-1 group flex items-center justify-between p-6 bg-primary hover:opacity-90 text-white rounded-[2rem] transition-all shadow-xl shadow-primary/20 active:scale-95"
                             >
-                                <div className="bg-blue-600 p-4 rounded-2xl text-white shadow-lg shadow-blue-500/20 z-10">
-                                    <Upload size={24} />
+                                <span className="text-[11px] font-black uppercase tracking-widest">Upload Lab Artifact</span>
+                                <div className="p-2 bg-white/10 rounded-xl group-hover:scale-110 transition-transform">
+                                    <Upload size={18} />
                                 </div>
-                                <div className="text-left z-10" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                                    <h3 className="font-black text-slate-800 dark:text-white tracking-widest uppercase text-xs">Medical Artifact</h3>
-                                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1 tracking-tighter">Secure Cloud Upload</p>
-                                </div>
-                                <div className="absolute -right-4 -bottom-4 bg-blue-500/5 w-24 h-24 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                             </button>
-
                             <button
                                 onClick={() => handleOpenModal('Injury')}
-                                className="w-full flex items-center gap-6 py-7 px-6 bg-white dark:bg-[#0f172a]/40 border border-indigo-500/10 dark:border-white/5 rounded-[2.5rem] hover:shadow-2xl hover:scale-[1.02] transition-all group overflow-hidden relative"
+                                className="p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 text-slate-900 dark:text-white rounded-[2rem] hover:bg-slate-50 dark:hover:bg-white/5 transition-all shadow-lg active:scale-95"
                             >
-                                <div className="bg-indigo-600 p-4 rounded-2xl text-white shadow-lg shadow-indigo-500/20 z-10">
-                                    <Plus size={24} />
-                                </div>
-                                <div className="text-left z-10" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                                    <h3 className="font-black text-slate-800 dark:text-white tracking-widest uppercase text-xs">Clinical Record</h3>
-                                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1 tracking-tighter">Direct Ledger Entry</p>
-                                </div>
-                                <div className="absolute -right-4 -bottom-4 bg-indigo-500/5 w-24 h-24 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                                <Plus size={20} />
                             </button>
                         </div>
-                    </section>
+                    </div>
 
-                    <section>
-                        <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">Recent Activity</h2>
-                        <div className="space-y-3">
+                    {/* Minimalist Activity List */}
+                    <div className="flex-1 flex flex-col min-h-0">
+                        <div className="flex items-center justify-between mb-4 px-1">
+                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Recent Logs</h3>
+                            {records.length > 0 && <span className="text-[10px] bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full text-slate-500 font-bold">{records.length}</span>}
+                        </div>
+
+                        <div className="space-y-2 overflow-y-auto pr-2 custom-scrollbar flex-1">
                             {loading ? (
-                                <p className="text-slate-400 dark:text-slate-500 text-sm">Loading records...</p>
+                                <div className="space-y-3">
+                                    {[1, 2, 3].map(i => <div key={i} className="h-16 bg-slate-100 dark:bg-white/5 rounded-2xl animate-pulse"></div>)}
+                                </div>
                             ) : records.length === 0 ? (
-                                <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 border-dashed">
-                                    <p className="text-slate-400 dark:text-slate-500 text-sm">No records found.</p>
-                                    <button onClick={() => setShowModal(true)} className="text-primary dark:text-blue-400 text-sm font-medium mt-2 hover:underline">Add your first record</button>
+                                <div className="py-12 text-center bg-slate-50 dark:bg-white/[0.02] rounded-3xl border border-dashed border-slate-200 dark:border-white/10">
+                                    <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">No entries yet</p>
                                 </div>
                             ) : (
-                                records.slice(0, 4).map((record) => (
-                                    <div key={record.id} className="flex items-center gap-5 p-5 bg-white dark:bg-[#0f172a]/40 border border-blue-500/5 dark:border-white/5 rounded-2xl hover:bg-white dark:hover:bg-white/5 transition-all cursor-pointer hover:shadow-xl group relative overflow-hidden">
-                                        <div className={`p-3 rounded-xl shadow-sm ${record.type === 'Injury' ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-500' :
+                                records.slice(0, 6).map((record) => (
+                                    <div key={record.id} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 border border-slate-50 dark:border-white/5 rounded-2xl hover:border-blue-200 dark:hover:border-blue-500/30 transition-all group cursor-pointer">
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${record.type === 'Injury' ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-500' :
                                             record.type === 'Surgery' ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-500' :
                                                 record.type === 'Prescription' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500' :
-                                                    'bg-blue-50 dark:bg-blue-500/10 text-blue-500'
+                                                    'bg-blue-50 dark:bg-blue-500/10 text-primary'
                                             }`}>
-                                            {record.type === 'Injury' && <Activity size={20} />}
-                                            {record.type === 'Surgery' && <Thermometer size={20} />}
-                                            {record.type === 'Prescription' && <Pill size={20} />}
-                                            {record.type === 'Report' && <FileText size={20} />}
+                                            {record.type === 'Injury' && <Activity size={18} />}
+                                            {record.type === 'Surgery' && <Thermometer size={18} />}
+                                            {record.type === 'Prescription' && <Pill size={18} />}
+                                            {record.type === 'Report' && <FileText size={18} />}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            {record.type === 'Report' && record.fileUrl ? (
-                                                <a href={`http://localhost:5001${record.fileUrl}`} target="_blank" rel="noopener noreferrer" className="block">
-                                                    <h4 className="font-black text-slate-800 dark:text-white truncate tracking-tight uppercase text-xs group-hover:text-blue-600 transition-colors">{record.description}</h4>
-                                                </a>
-                                            ) : (
-                                                <h4 className="font-black text-slate-800 dark:text-white truncate tracking-tight uppercase text-xs">{record.description}</h4>
-                                            )}
-                                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-0.5 tracking-wider">{record.bodyPart} • {new Date(record.date).toLocaleDateString()}</p>
+                                            <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-blue-600 transition-colors uppercase tracking-tight">{record.description}</h4>
+                                            <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{record.bodyPart} • {new Date(record.date).toLocaleDateString()}</p>
                                         </div>
-                                        <div className="absolute right-0 top-0 bottom-0 w-1 bg-transparent group-hover:bg-blue-600 transition-all"></div>
                                     </div>
                                 ))
                             )}
                         </div>
-                    </section>
+                    </div>
                 </div>
 
-                {/* Right Column: Body Scan */}
-                <div className="flex-1 bg-slate-50 dark:bg-[#020617] rounded-[2rem] sm:rounded-[3rem] border-2 border-blue-500/20 dark:border-blue-500/30 shadow-xl dark:shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] p-4 sm:p-8 flex flex-col items-center justify-center relative overflow-hidden group animate-slide-up order-first lg:order-last min-h-[500px] lg:min-h-0" style={{ animationDelay: '0.2s' }}>
+                {/* Right Column: Central Scan Interface */}
+                <div className="flex-1 flex flex-col min-h-[500px] lg:min-h-0 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                    <div className="relative flex-1 bg-white dark:bg-slate-950 rounded-[3rem] border border-slate-100 dark:border-white/5 shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden group">
 
-                    {/* Interactive Scan Overlay */}
-                    <div className="absolute inset-0 scanner-grid opacity-[0.05] dark:opacity-30 pointer-events-none rounded-3xl overflow-hidden">
-                        <div className="scan-line"></div>
-                    </div>
+                        {/* Subtle Grid Background */}
+                        <div className="absolute inset-0 scanner-grid opacity-[0.03] dark:opacity-20 pointer-events-none"></div>
 
-                    {/* Ambient Glows */}
-                    <div className="absolute top-1/4 left-1/4 w-32 sm:w-64 h-32 sm:h-64 bg-blue-600/[0.03] dark:bg-blue-600/10 rounded-full blur-[60px] sm:blur-[100px] pointer-events-none"></div>
-                    <div className="absolute bottom-1/4 right-1/4 w-32 sm:w-64 h-32 sm:h-64 bg-indigo-600/[0.03] dark:bg-indigo-600/10 rounded-full blur-[60px] sm:blur-[100px] pointer-events-none"></div>
-
-                    {/* Floating Decorative Metadata */}
-                    <div className="absolute top-4 sm:top-8 left-4 sm:left-8 space-y-1 sm:space-y-2 pointer-events-none hidden sm:block select-none opacity-40 dark:opacity-60">
-                        <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                            <p className="text-[8px] sm:text-[10px] font-mono text-blue-600 dark:text-blue-400 font-bold tracking-tighter uppercase">Anatomy v2.4-Scan</p>
-                        </div>
-                        <p className="text-[8px] sm:text-[10px] font-mono text-slate-400 dark:text-slate-500 font-bold tracking-tighter uppercase ml-3">X: 142.92 | Y: 84.1</p>
-                    </div>
-
-                    <div className="absolute top-4 sm:top-8 right-4 sm:right-8 pointer-events-none hidden sm:block select-none opacity-40 dark:opacity-60 text-right">
-                        <p className="text-[8px] sm:text-[10px] font-mono text-blue-600 dark:text-blue-400 font-bold tracking-tighter uppercase">Bio-Metric: Active</p>
-                        <p className="text-[8px] sm:text-[10px] font-mono text-slate-400 dark:text-slate-500 font-bold tracking-tighter uppercase">Sync: 100%</p>
-                    </div>
-
-                    <div className="relative z-10 w-full h-full flex items-center justify-center py-4 scale-[1.1] sm:scale-[1.3] transition-transform duration-700 group-hover:scale-110 sm:group-hover:scale-125">
-                        <BodyModel onPartClick={handlePartClick} />
-                    </div>
-
-                    {/* Bottom Instructions */}
-                    {!selectedPart && (
-                        <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 bg-white dark:bg-blue-500/10 backdrop-blur-xl px-4 sm:px-8 py-2 sm:py-3 rounded-full border border-blue-200 dark:border-blue-500/30 shadow-lg flex items-center gap-2 sm:gap-3 z-20 animate-bounce cursor-default whitespace-nowrap">
-                            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-blue-500 animate-pulse shadow-sm"></div>
-                            <span className="text-[9px] sm:text-[11px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.2em] sm:tracking-[0.25em]">Initiate Analysis</span>
-                        </div>
-                    )}
-
-                    {/* Side Panel Overlay */}
-                    <div
-                        className={`fixed sm:absolute top-0 right-0 w-full sm:w-[420px] h-full bg-white/95 dark:bg-slate-950/90 backdrop-blur-2xl border-l border-blue-500/10 dark:border-blue-500/20 shadow-2xl transform transition-transform duration-700 ease-out z-[60] sm:z-40 p-6 sm:p-10 overflow-y-auto ${selectedPart ? 'translate-x-0' : 'translate-x-full'
-                            }`}
-                    >
-                        <div className="sticky top-0 z-10 -mx-6 sm:-mx-10 -mt-6 sm:-mt-10 mb-6 sm:mb-10 px-6 sm:px-10 py-6 sm:py-8 bg-white/95 dark:bg-[#020617]/95 backdrop-blur-xl border-b border-slate-100 dark:border-white/5 flex items-center justify-between shadow-sm dark:shadow-lg dark:shadow-black/20">
-                            <div className="min-w-0">
-                                <span className="text-[8px] sm:text-[10px] font-black text-blue-600 dark:text-blue-500 uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-1 block truncate">Part Sig: 0x{selectedPart?.id || 'F1'}</span>
-                                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic truncate">{selectedPart?.name}</h2>
+                        {/* Center Stage Body Model */}
+                        <div className="absolute inset-0 flex items-center justify-center p-8 transition-all duration-1000 group-hover:scale-105">
+                            <div className="w-full h-full max-w-2xl flex items-center justify-center scale-110 lg:scale-[1.25]">
+                                <BodyModel onPartClick={handlePartClick} />
                             </div>
-                            <button onClick={closePanel} className="p-2 sm:p-3 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-xl sm:rounded-2xl text-slate-500 dark:text-white/50 hover:text-blue-600 dark:hover:text-white transition-all hover:scale-105 active:scale-95 flex-shrink-0 ml-4">
-                                <X size={20} sm:size={24} />
-                            </button>
                         </div>
 
-                        {selectedPart && (
-                            <div className="space-y-8 pb-12">
-                                {/* Biometric Summary Header */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">Status</p>
-                                        <div className="flex items-center gap-2">
-                                            <div className={`w-2.5 h-2.5 rounded-full shadow-sm animate-pulse ${records.filter(r => r.bodyPart === selectedPart.name).length > 2 ? 'bg-orange-500 shadow-orange-500/20' :
-                                                records.filter(r => r.bodyPart === selectedPart.name).length > 0 ? 'bg-blue-500 shadow-blue-500/20' : 'bg-emerald-500 shadow-emerald-500/20'
-                                                }`}></div>
-                                            <span className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
-                                                {records.filter(r => r.bodyPart === selectedPart.name).length > 2 ? 'Under Review' :
-                                                    records.filter(r => r.bodyPart === selectedPart.name).length > 0 ? 'Recorded' : 'Optimal'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">Data Cycles</p>
-                                        <span className="text-2xl font-black text-slate-900 dark:text-white leading-none">
-                                            {records.filter(r => r.bodyPart === selectedPart.name).length}
-                                        </span>
-                                    </div>
-                                </div>
+                        {/* Status Tags */}
+                        <div className="absolute top-10 left-10 space-y-3 pointer-events-none">
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/5 dark:bg-blue-500/10 rounded-full border border-blue-500/10 backdrop-blur-md">
+                                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                                <span className="text-[9px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">System Active</span>
+                            </div>
+                        </div>
 
-                                {/* Part Description */}
-                                <div className="bg-blue-50/50 dark:bg-blue-900/10 p-5 rounded-3xl border border-blue-100/50 dark:border-blue-800/30">
-                                    <h4 className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-2">Anatomical Context</h4>
-                                    <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                        {/* Interactive Hint - Relocated to top right to clear vision */}
+                        {!selectedPart && (
+                            <div className="absolute top-10 right-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700 translate-x-4 group-hover:translate-x-0">
+                                <div className="px-5 py-2 bg-blue-500/10 dark:bg-white/5 backdrop-blur-md border border-blue-500/20 dark:border-white/10 text-blue-600 dark:text-blue-400 rounded-xl text-[9px] font-black uppercase tracking-[0.3em] flex items-center gap-3">
+                                    <div className="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                                    Select Region to Analyze
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Anatomical Detail HUD (Dynamic Side Panel) */}
+                        {selectedPart && (
+                            <div className="absolute top-8 right-8 bottom-8 w-[400px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-white/20 dark:border-white/5 rounded-[3rem] shadow-2xl z-50 animate-slide-left p-8 flex flex-col overflow-hidden">
+                                {/* HUD Close Command */}
+                                <button
+                                    onClick={closePanel}
+                                    className="absolute top-8 right-8 p-3 hover:bg-slate-100 dark:hover:bg-white/5 rounded-2xl text-slate-400 transition-all active:scale-90"
+                                >
+                                    <X size={20} />
+                                </button>
+
+                                {/* Biological Identification */}
+                                <div className="mb-10">
+                                    <p className="text-[11px] font-black text-primary uppercase tracking-[0.4em] mb-3">Diagnostic Context</p>
+                                    <h3 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-tight">
+                                        {selectedPart.name}
+                                    </h3>
+                                    <p className="text-xs font-medium text-slate-500 mt-4 leading-relaxed group/info">
                                         {getPartInsights(selectedPart.name).info}
                                     </p>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <h3 className="flex items-center gap-2 text-xs font-black text-red-500 uppercase tracking-[0.15em] bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-xl w-fit">
-                                        <Activity size={14} /> Injuries
-                                    </h3>
-                                    {getRecordsByType(selectedPart.name, 'Injury').length > 0 ? (
-                                        getRecordsByType(selectedPart.name, 'Injury').map(r => (
-                                            <div key={r.id} className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group flex items-start justify-between">
-                                                <div>
-                                                    <p className="font-bold text-slate-800 dark:text-slate-100 tracking-tight">{r.description}</p>
-                                                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">{new Date(r.date).toLocaleDateString()}</p>
+                                {/* Historical Data Stream */}
+                                <div className="flex-1 overflow-y-auto custom-scrollbar space-y-10 pr-2">
+                                    <section className="space-y-6">
+                                        <div className="flex items-center justify-between px-2">
+                                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Archive Stream</h4>
+                                            <span className="text-[9px] font-black text-primary uppercase tracking-widest bg-blue-500/10 px-3 py-1 rounded-full">
+                                                {records.filter(r => r.bodyPart === selectedPart.name).length} Entries
+                                            </span>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            {records.filter(r => r.bodyPart === selectedPart.name).length > 0 ? (
+                                                records.filter(r => r.bodyPart === selectedPart.name).map(r => (
+                                                    <div key={r.id} className="group p-6 bg-slate-50/50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 rounded-[2rem] hover:border-blue-500/30 transition-all relative overflow-hidden">
+                                                        <div className="flex items-start justify-between relative z-10">
+                                                            <div className="space-y-3">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`p-1.5 rounded-lg ${r.type === 'Injury' ? 'bg-rose-500' :
+                                                                        r.type === 'Surgery' ? 'bg-amber-500' : 'bg-blue-500'
+                                                                        }`}></div>
+                                                                    <p className="font-black text-slate-800 dark:text-white uppercase text-[10px] tracking-widest">{r.type}</p>
+                                                                </div>
+                                                                <p className="text-[13px] font-bold text-slate-600 dark:text-slate-300 leading-tight">{r.description}</p>
+                                                                <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">{new Date(r.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                                                            </div>
+                                                            <button
+                                                                onClick={(e) => handleDelete(e, r.id)}
+                                                                className="p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="py-12 text-center bg-slate-50/50 dark:bg-white/[0.02] rounded-[2rem] border border-dashed border-slate-100 dark:border-white/5">
+                                                    <p className="text-[9px] font-black text-slate-300 dark:text-white/10 uppercase tracking-[0.3em]">No Historical Artifacts</p>
                                                 </div>
-                                                <button
-                                                    onClick={(e) => handleDelete(e, r.id)}
-                                                    className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/40 rounded-xl transition-all"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p className="text-slate-400 dark:text-slate-500 text-xs font-semibold pl-1 tracking-widest uppercase">Clearance: Positive</p>
-                                    )}
-                                </div>
+                                            )}
+                                        </div>
+                                    </section>
 
-                                <div className="space-y-4">
-                                    <h3 className="flex items-center gap-2 text-xs font-black text-orange-500 uppercase tracking-[0.15em] bg-orange-50 dark:bg-orange-900/20 px-3 py-2 rounded-xl w-fit">
-                                        <Thermometer size={14} /> Surgeries
-                                    </h3>
-                                    {getRecordsByType(selectedPart.name, 'Surgery').length > 0 ? (
-                                        getRecordsByType(selectedPart.name, 'Surgery').map(r => (
-                                            <div key={r.id} className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group flex items-start justify-between">
-                                                <div>
-                                                    <p className="font-bold text-slate-800 dark:text-slate-100 tracking-tight">{r.description}</p>
-                                                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">{new Date(r.date).toLocaleDateString()}</p>
+                                    {/* Preventative Protocols */}
+                                    <section className="space-y-6">
+                                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Clinical Recommendations</h4>
+                                        <div className="space-y-4">
+                                            {getPartInsights(selectedPart.name).tips.map((tip, i) => (
+                                                <div key={i} className="flex gap-4 p-5 bg-emerald-500/[0.03] dark:bg-emerald-500/[0.05] rounded-[2rem] border border-emerald-500/10 group/tip">
+                                                    <div className="mt-1.5 w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0 group-hover/tip:scale-125 transition-transform"></div>
+                                                    <p className="text-xs font-bold text-emerald-800 dark:text-emerald-400/80 leading-relaxed uppercase tracking-tight">{tip}</p>
                                                 </div>
-                                                <button
-                                                    onClick={(e) => handleDelete(e, r.id)}
-                                                    className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/40 rounded-xl transition-all"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p className="text-slate-400 dark:text-slate-500 text-xs font-semibold pl-1 tracking-widest uppercase">No surgical history</p>
-                                    )}
-                                </div>
-
-                                <div className="space-y-4">
-                                    <h3 className="flex items-center gap-2 text-xs font-black text-blue-500 uppercase tracking-[0.15em] bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-xl w-fit">
-                                        <FileText size={14} /> Medical Artifacts
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {getRecordsByType(selectedPart.name, 'Report').length > 0 ? (
-                                            getRecordsByType(selectedPart.name, 'Report').map(r => renderReportItem(r))
-                                        ) : (
-                                            <p className="text-slate-400 dark:text-slate-500 text-xs font-semibold pl-1 tracking-widest uppercase">Archive Empty</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Anatomy Wellness Tips */}
-                                <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                                    <h3 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.25em] mb-5">Wellness Directives</h3>
-                                    <div className="space-y-4">
-                                        {getPartInsights(selectedPart.name).tips.map((tip, idx) => (
-                                            <div key={idx} className="flex items-start gap-4 group">
-                                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/40 group-hover:scale-150 transition-transform duration-300"></div>
-                                                <p className="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors cursor-default leading-tight">{tip}</p>
-                                            </div>
-                                        ))}
-                                    </div>
+                                            ))}
+                                        </div>
+                                    </section>
                                 </div>
                             </div>
                         )}
@@ -399,110 +365,125 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Add Record Modal */}
+
+            {/* Add Record Modal - High End Archive Interface */}
             {showModal && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-fade-in">
-                    <div className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden animate-slide-up border border-slate-200 dark:border-slate-800">
-                        <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/20">
-                            <div>
-                                <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Add Record</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-500">Document your medical event</p>
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 overflow-hidden">
+                    <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-3xl animate-fade-in" onClick={() => setShowModal(false)}></div>
+
+                    {/* Microscopic background grid for modal depth */}
+                    <div className="absolute inset-0 scanner-grid opacity-[0.05] pointer-events-none"></div>
+
+                    <div className="relative w-full max-w-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden animate-zoom-in border border-white/20 dark:border-white/5">
+                        <div className="p-12 border-b border-slate-100 dark:border-white/[0.03] flex justify-between items-center relative">
+                            {/* Decorative Corner element */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full -mr-16 -mt-16"></div>
+
+                            <div className="relative">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-px bg-blue-500"></div>
+                                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.4em]">Protocol Initialization</p>
+                                </div>
+                                <h3 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic">Log <span className="text-primary">Artifact</span></h3>
                             </div>
-                            <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full text-slate-400 transition-colors">
-                                <X size={24} />
+                            <button onClick={() => setShowModal(false)} className="p-4 hover:bg-slate-100 dark:hover:bg-white/5 rounded-[1.5rem] text-slate-400 transition-all active:scale-90 group">
+                                <X size={24} className="group-hover:rotate-90 transition-transform duration-500" />
                             </button>
                         </div>
-                        <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                            <div className="space-y-1">
-                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Type</label>
-                                <select
-                                    name="type"
-                                    value={formData.type}
-                                    onChange={handleInputChange}
-                                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all bg-slate-50 dark:bg-slate-800 dark:text-white font-bold"
-                                >
-                                    <option value="Injury">Injury</option>
-                                    <option value="Surgery">Surgery</option>
-                                    <option value="Prescription">Prescription</option>
-                                    <option value="Report">Medical Report</option>
-                                </select>
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Anatomy</label>
-                                <select
-                                    name="bodyPart"
-                                    value={formData.bodyPart}
-                                    onChange={handleInputChange}
-                                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all bg-slate-50 dark:bg-slate-800 dark:text-white font-bold"
-                                    required
-                                >
-                                    <option value="">Select Region</option>
-                                    <option value="Head & Neck">Head & Neck</option>
-                                    <option value="Chest">Chest</option>
-                                    <option value="Shoulders">Shoulders</option>
-                                    <option value="Arms">Arms</option>
-                                    <option value="Forearms">Forearms</option>
-                                    <option value="Abdominals">Abdominals</option>
-                                    <option value="Obliques">Obliques</option>
-                                    <option value="Hips">Hips</option>
-                                    <option value="Quadriceps">Quadriceps</option>
-                                    <option value="Knees">Knees</option>
-                                    <option value="Calves">Calves</option>
-                                    <option value="Feet">Feet</option>
-                                    <option value="Back">Back</option>
-                                </select>
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Description</label>
-                                <input
-                                    type="text"
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleInputChange}
-                                    placeholder="Brief diagnosis"
-                                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all bg-slate-50 dark:bg-slate-800 dark:text-white font-bold"
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Event Date</label>
-                                <input
-                                    type="date"
-                                    name="date"
-                                    value={formData.date}
-                                    onChange={handleInputChange}
-                                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all bg-slate-50 dark:bg-slate-800 dark:text-white font-bold"
-                                    required
-                                />
-                            </div>
 
-                            {formData.type === 'Report' && (
-                                <div className="animate-fade-in space-y-1">
-                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Artifact Upload</label>
-                                    <div className="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer relative">
-                                        <input
-                                            type="file"
-                                            accept=".pdf,.jpg,.jpeg,.png"
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                            onChange={handleFileChange}
-                                        />
-                                        <div className="flex flex-col items-center gap-3 text-slate-400 dark:text-slate-500">
-                                            <Upload size={32} />
-                                            <span className="text-sm font-black uppercase tracking-wider">
-                                                {formData.file ? formData.file.name : "Select Document"}
-                                            </span>
+                        <form onSubmit={handleSubmit} className="p-12 space-y-12">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Archive Type</label>
+                                    <div className="relative">
+                                        <select
+                                            name="type"
+                                            value={formData.type}
+                                            onChange={handleInputChange}
+                                            className="w-full px-8 py-5 rounded-[2rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white appearance-none uppercase tracking-widest cursor-pointer"
+                                        >
+                                            <option value="Injury">Physical Trauma</option>
+                                            <option value="Surgery">Clinical Procedure</option>
+                                            <option value="Prescription">Pharmacology</option>
+                                            <option value="Report">Diagnostic Artifact</option>
+                                        </select>
+                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-30">
+                                            <Activity size={16} />
                                         </div>
                                     </div>
                                 </div>
-                            )}
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Anatomical Region</label>
+                                    <div className="relative">
+                                        <select
+                                            name="bodyPart"
+                                            value={formData.bodyPart}
+                                            onChange={handleInputChange}
+                                            className="w-full px-8 py-5 rounded-[2rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white appearance-none uppercase tracking-widest cursor-pointer"
+                                            required
+                                        >
+                                            <option value="">Select Region</option>
+                                            {['Head & Neck', 'Chest', 'Shoulders', 'Arms', 'Forearms', 'Abdominals', 'Hips', 'Quadriceps', 'Knees', 'Calves', 'Feet', 'Back'].map(part => (
+                                                <option key={part} value={part}>{part}</option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-30">
+                                            <ChevronRight size={18} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Clinical Identification</label>
+                                    <input
+                                        type="text"
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter diagnostic notes..."
+                                        className="w-full px-8 py-5 rounded-[2rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 uppercase tracking-widest"
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Temporal Stamp</label>
+                                    <input
+                                        type="date"
+                                        name="date"
+                                        value={formData.date}
+                                        onChange={handleInputChange}
+                                        className="w-full px-8 py-5 rounded-[2rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white uppercase tracking-widest"
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Data Attachment</label>
+                                    <div className="relative group/file">
+                                        <input
+                                            type="file"
+                                            onChange={handleFileChange}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        />
+                                        <div className="w-full px-8 py-5 rounded-[2rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] flex items-center justify-between group-hover/file:bg-slate-100 dark:group-hover/file:bg-white/5 transition-all">
+                                            <span className="text-[11px] font-black text-slate-500 uppercase truncate pr-4 tracking-widest">
+                                                {formData.file ? formData.file.name : "Select Artifact"}
+                                            </span>
+                                            <Upload size={18} className="text-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div className="pt-4">
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/40"
+                                    className="w-full py-7 bg-slate-950 dark:bg-white text-white dark:text-slate-900 rounded-[2.5rem] font-black uppercase text-[12px] tracking-[0.4em] hover:bg-primary dark:hover:bg-blue-500 dark:hover:text-white transition-all shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-none flex items-center justify-center gap-4 group active:scale-95"
                                 >
-                                    Finalize Entry
+                                    <span>Commit to Archive</span>
+                                    <div className="p-2 bg-white/10 dark:bg-slate-900/10 rounded-xl group-hover:bg-white/20 transition-colors">
+                                        <Plus size={20} />
+                                    </div>
                                 </button>
+                                <p className="mt-8 text-center text-[9px] font-black text-slate-300 dark:text-white/10 uppercase tracking-[0.5em]">Encryption protocol active • AES-256</p>
                             </div>
                         </form>
                     </div>

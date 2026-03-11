@@ -31,145 +31,176 @@ const HealthSetup = () => {
             navigate('/dashboard');
         } catch (error) {
             console.error("Failed to update profile", error);
-            alert("Failed to save health entries. Please try again.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
-            {/* Background Decor */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl"></div>
+        <div className="min-h-screen bg-white dark:bg-[#030712] flex items-center justify-center p-6 relative overflow-hidden font-['Plus_Jakarta_Sans',sans-serif]">
+            {/* Ambient HUD Background */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] dark:opacity-[0.07] scanner-grid"></div>
+                <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[140px] animate-pulse"></div>
+                <div className="absolute bottom-[-10%] left-[-5%] w-[800px] h-[800px] bg-indigo-500/10 rounded-full blur-[140px] animate-pulse [animation-delay:2s]"></div>
             </div>
 
-            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl w-full max-w-lg border border-white/50 dark:border-slate-800 relative z-10 animate-slide-up">
-                <div className="text-center mb-8">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400">
-                        <Activity size={32} />
-                    </div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Basic Health Entries</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Let's set up your profile for better health tracking.</p>
+            <div className="w-full max-w-2xl bg-white/70 dark:bg-slate-900/40 backdrop-blur-[40px] p-12 sm:p-20 rounded-[4.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.1)] dark:shadow-none border border-slate-100 dark:border-white/5 relative z-10 animate-zoom-in group overflow-hidden">
+                {/* Microscopic HUD details */}
+                <div className="absolute top-12 right-12 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                    <div className="w-2 h-2 rounded-full bg-slate-200 dark:bg-white/10"></div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Name */}
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1">Full Name</label>
+                <div className="mb-16 text-center sm:text-left relative">
+                    <div className="flex items-center gap-3 mb-5">
+                        <div className="w-10 h-px bg-blue-500"></div>
+                        <p className="text-[11px] font-black text-blue-500 uppercase tracking-[0.5em] leading-none">Initialization Terminal v4.0</p>
+                    </div>
+                    <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">Biometric <span className="text-blue-500">Onboarding</span></h1>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-6 font-medium max-w-md leading-relaxed">
+                        Establishing your primary biological dataset. These parameters synchronize your neural archive with our clinical monitoring protocols.
+                    </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-12">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                        {/* Name - Full Width */}
+                        <div className="md:col-span-2 group/input">
+                            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] mb-4 ml-2 group-focus-within/input:text-blue-500 transition-colors">Legal Designation</label>
                             <div className="relative">
-                                <User className="absolute left-4 top-3.5 text-slate-400" size={18} />
+                                <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
+                                    <User size={18} className="text-blue-500/30 group-focus-within/input:text-blue-500 transition-colors" />
+                                </div>
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 dark:text-white"
-                                    placeholder="Your Name"
+                                    className="w-full pl-16 pr-8 py-6 rounded-[2.5rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 uppercase tracking-widest"
+                                    placeholder="Verify Full Name"
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Age */}
-                        <div>
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1">Age</label>
+                        <div className="space-y-4">
+                            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Temporal Age</label>
                             <input
                                 type="number"
                                 name="age"
                                 value={formData.age}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 dark:text-white"
-                                placeholder="e.g. 25"
+                                className="w-full px-8 py-6 rounded-[2.5rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white uppercase tracking-widest placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                placeholder="Year"
                                 required
                             />
                         </div>
 
                         {/* Gender */}
-                        <div>
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1">Gender</label>
-                            <select
-                                name="gender"
-                                value={formData.gender}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 dark:text-white"
-                            >
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
+                        <div className="space-y-4">
+                            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Biological Axis</label>
+                            <div className="relative">
+                                <select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className="w-full px-8 py-6 rounded-[2.5rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white appearance-none cursor-pointer uppercase tracking-widest"
+                                >
+                                    <option value="Male">Male Axis</option>
+                                    <option value="Female">Female Axis</option>
+                                    <option value="Other">Non-Binary</option>
+                                </select>
+                                <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none opacity-30">
+                                    <Activity size={16} />
+                                </div>
+                            </div>
                         </div>
 
                         {/* Height */}
-                        <div>
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1">Height</label>
-                            <div className="relative">
-                                <Ruler className="absolute left-4 top-3.5 text-slate-400" size={18} />
-                                <input
-                                    type="text"
-                                    name="height"
-                                    value={formData.height}
-                                    onChange={handleChange}
-                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 dark:text-white"
-                                    placeholder="e.g. 175 cm"
-                                    required
-                                />
-                            </div>
+                        <div className="space-y-4">
+                            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2 flex items-center gap-3">
+                                <Ruler size={14} className="text-blue-500" />
+                                Vertical Stature (cm)
+                            </label>
+                            <input
+                                type="text"
+                                name="height"
+                                value={formData.height}
+                                onChange={handleChange}
+                                className="w-full px-8 py-6 rounded-[2.5rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white uppercase tracking-widest placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                placeholder="175.00"
+                                required
+                            />
                         </div>
 
                         {/* Weight */}
-                        <div>
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1">Weight</label>
-                            <div className="relative">
-                                <Weight className="absolute left-4 top-3.5 text-slate-400" size={18} />
-                                <input
-                                    type="text"
-                                    name="weight"
-                                    value={formData.weight}
-                                    onChange={handleChange}
-                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 dark:text-white"
-                                    placeholder="e.g. 70 kg"
-                                    required
-                                />
-                            </div>
+                        <div className="space-y-4">
+                            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2 flex items-center gap-3">
+                                <Weight size={14} className="text-blue-500" />
+                                Physical Mass (kg)
+                            </label>
+                            <input
+                                type="text"
+                                name="weight"
+                                value={formData.weight}
+                                onChange={handleChange}
+                                className="w-full px-8 py-6 rounded-[2.5rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white uppercase tracking-widest placeholder:text-slate-300 dark:placeholder:text-slate-700"
+                                placeholder="70.00"
+                                required
+                            />
                         </div>
 
-                        {/* Blood Group */}
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1">Blood Group</label>
+                        {/* Blood Group - Full Width */}
+                        <div className="md:col-span-2 space-y-4">
+                            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2 flex items-center gap-3">
+                                <Droplet size={14} className="text-rose-500" />
+                                Hematic Signature
+                            </label>
                             <div className="relative">
-                                <Droplet className="absolute left-4 top-3.5 text-slate-400" size={18} />
                                 <select
                                     name="bloodGroup"
                                     value={formData.bloodGroup}
                                     onChange={handleChange}
-                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all bg-slate-50 dark:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 dark:text-white"
+                                    className="w-full px-8 py-6 rounded-[2.5rem] border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white appearance-none cursor-pointer uppercase tracking-widest"
                                     required
                                 >
-                                    <option value="">Select Blood Group</option>
-                                    <option value="A+">A+</option>
-                                    <option value="A-">A-</option>
-                                    <option value="B+">B+</option>
-                                    <option value="B-">B-</option>
-                                    <option value="AB+">AB+</option>
-                                    <option value="AB-">AB-</option>
-                                    <option value="O+">O+</option>
-                                    <option value="O-">O-</option>
+                                    <option value="">SCANNING REQUIRED...</option>
+                                    <option value="A+">A Positive (+)</option>
+                                    <option value="A-">A Negative (-)</option>
+                                    <option value="B+">B Positive (+)</option>
+                                    <option value="B-">B Negative (-)</option>
+                                    <option value="AB+">AB Positive (+)</option>
+                                    <option value="AB-">AB Negative (-)</option>
+                                    <option value="O+">O Positive (+)</option>
+                                    <option value="O-">O Negative (-)</option>
                                 </select>
+                                <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none opacity-30">
+                                    <Activity size={16} />
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-10">
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-slate-950 dark:bg-white text-white dark:text-slate-900 py-7 md:py-8 rounded-[3rem] font-black uppercase tracking-[0.4em] text-xs hover:bg-blue-600 dark:hover:bg-blue-500 dark:hover:text-white transition-all shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] dark:shadow-none hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group"
                         >
-                            {loading ? 'Saving...' : 'Save & Continue to Dashboard'}
+                            {loading ? (
+                                <div className="flex items-center justify-center gap-4">
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></div>
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:0.2s]"></div>
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:0.4s]"></div>
+                                    <span className="ml-2">SYNCHRONIZING REPOSITORY</span>
+                                </div>
+                            ) : (
+                                <span className="group-hover:tracking-[0.5em] transition-all duration-700">Initialize Clinical Dashboard</span>
+                            )}
                         </button>
+                        <p className="mt-8 text-center text-[9px] font-black text-slate-300 dark:text-white/10 uppercase tracking-[0.5em]">Encryption Protocol Base: active</p>
                     </div>
                 </form>
             </div>

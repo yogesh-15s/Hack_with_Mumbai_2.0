@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: #3b82f6;
+  /* Default Blue-500 */
+  --primary-glow: rgba(59, 130, 246, 0.5);
+}
+
 @layer base {
   html {
     @apply scroll-smooth;
@@ -50,8 +56,8 @@
 
   .scanner-grid {
     background-image:
-      linear-gradient(to right, rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+      linear-gradient(to right, var(--primary-glow) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--primary-glow) 1px, transparent 1px);
     background-size: 30px 30px;
   }
 
@@ -60,11 +66,11 @@
     height: 4px;
     background: linear-gradient(to right,
         transparent,
-        rgba(59, 130, 246, 0.8),
-        #60a5fa,
-        rgba(59, 130, 246, 0.8),
+        var(--primary-color),
+        var(--primary-color),
+        var(--primary-color),
         transparent);
-    box-shadow: 0 0 20px 4px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 20px 4px var(--primary-glow);
     position: absolute;
     top: 0;
     left: 0;
@@ -76,6 +82,14 @@
     animation: glowPulse 2s ease-in-out infinite;
   }
 
+  .animate-zoom-in {
+    animation: zoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-slide-left {
+    animation: slideLeft 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 5px;
   }
@@ -85,12 +99,12 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(59, 130, 246, 0.2);
+    background: var(--primary-glow);
     border-radius: 10px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(59, 130, 246, 0.4);
+    background: var(--primary-color);
   }
 }
 
@@ -113,6 +127,30 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

@@ -12,6 +12,12 @@ export const ThemeProvider = ({ children }) => {
         }
         return 'light';
     });
+    const [primaryColor, setPrimaryColorState] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('primaryColor') || '#3b82f6';
+        }
+        return '#3b82f6';
+    });
 
     // We use a function to update theme AND DOM simultaneously
     const setTheme = (newTheme) => {
@@ -29,9 +35,24 @@ export const ThemeProvider = ({ children }) => {
         }
     };
 
+    const setPrimaryColor = (color) => {
+        setPrimaryColorState(color);
+        if (typeof window !== 'undefined') {
+            const root = window.document.documentElement;
+            root.style.setProperty('--primary-color', color);
+            // Simple hex to rgba for glow
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+            root.style.setProperty('--primary-glow', `rgba(${r}, ${g}, ${b}, 0.5)`);
+            localStorage.setItem('primaryColor', color);
+        }
+    };
+
     // Keep DOM in sync on mount
     useLayoutEffect(() => {
         setTheme(theme);
+        setPrimaryColor(primaryColor);
     }, []);
 
     const toggleTheme = (e) => {
@@ -41,7 +62,7 @@ export const ThemeProvider = ({ children }) => {
     };
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, primaryColor, setPrimaryColor }}>
             {children}
         </ThemeContext.Provider>
     );

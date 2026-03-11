@@ -60,81 +60,105 @@ const Appointments = () => {
 
     return (
         <Layout>
-            <div className="max-w-5xl mx-auto animate-slide-up">
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Appointments</h1>
-                        <p className="text-slate-500 dark:text-slate-400 mt-2">Manage and schedule your medical consultations.</p>
+            <div className="max-w-7xl mx-auto py-8">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 animate-fade-in">
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-px bg-indigo-500"></div>
+                            <p className="text-[11px] font-black text-indigo-500 uppercase tracking-[0.4em]">Clinical Scheduler v2.1</p>
+                        </div>
+                        <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">Diagnostic Timeline</h1>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium max-w-lg leading-relaxed">
+                            Synchronize your medical consultations, diagnostic procedures, and specialist reviews within a secure temporal interface.
+                        </p>
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30"
+                        className="group relative flex items-center gap-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-10 py-5 rounded-[2.5rem] font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-indigo-500/10 dark:shadow-white/5 overflow-hidden"
                     >
-                        <Plus size={20} />
-                        Schedule New
+                        <div className="absolute inset-0 bg-indigo-500/10 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                        <Plus size={18} className="relative z-10" />
+                        <span className="relative z-10">Initialize Schedule</span>
                     </button>
                 </div>
 
                 {appointments.length === 0 ? (
-                    <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
-                        <div className="bg-blue-50 dark:bg-blue-900/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-blue-500">
-                            <Calendar size={40} />
+                    <div className="text-center py-32 bg-white dark:bg-slate-900/50 backdrop-blur-3xl rounded-[4rem] border border-dashed border-slate-200 dark:border-white/10 flex flex-col items-center group">
+                        <div className="bg-indigo-500/10 w-24 h-24 rounded-[2.5rem] flex items-center justify-center mb-8 text-indigo-500 group-hover:scale-110 transition-transform duration-700">
+                            <Calendar size={48} />
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">No appointments scheduled</h3>
-                        <p className="text-slate-500 dark:text-slate-400 mt-2 max-w-sm mx-auto">Keep track of your doctor visits and health checkups in one place.</p>
-                        <button
-                            onClick={() => setShowModal(true)}
-                            className="mt-6 text-primary dark:text-blue-400 font-semibold hover:underline"
-                        >
-                            Schedule your first appointment
-                        </button>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight italic">Timeline: Empty State</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-4 max-w-sm mx-auto font-medium leading-relaxed">
+                            No medical synchronization detected. Active your clinical schedule to track future diagnostic milestones.
+                        </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 animate-slide-up">
                         {appointments.map((app) => (
-                            <div key={app.id} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group relative">
+                            <div key={app.id} className="group bg-white dark:bg-slate-900/60 backdrop-blur-2xl p-10 rounded-[3.5rem] border border-slate-100 dark:border-white/5 hover:border-indigo-500/30 transition-all duration-700 relative overflow-hidden flex flex-col shadow-sm hover:shadow-2xl hover:shadow-indigo-500/5">
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl -mr-24 -mt-24"></div>
+
                                 <button
                                     onClick={() => deleteAppointment(app.id)}
-                                    className="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                                    className="absolute top-8 right-8 p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-2xl transition-all opacity-0 group-hover:opacity-100 z-20"
                                 >
-                                    <Trash2 size={18} />
+                                    <Trash2 size={20} />
                                 </button>
 
-                                <div className="flex items-start gap-4 mb-4">
-                                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl">
-                                        <Calendar size={24} />
+                                <div className="flex items-start gap-8 mb-10 relative z-10">
+                                    <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 rounded-[2rem] flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all duration-700 shadow-sm border border-indigo-100 dark:border-indigo-500/20">
+                                        <Calendar size={36} />
                                     </div>
-                                    <div>
-                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{app.title}</h3>
-                                        <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-1">
-                                            <User size={14} /> {app.doctor}
-                                        </p>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full">CONFIRMED</span>
+                                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ID: 0x{app.id.toString().slice(-4)}</span>
+                                        </div>
+                                        <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase mb-2 truncate italic leading-none">{app.title}</h3>
+                                        <div className="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                                            <User size={14} className="text-indigo-500" />
+                                            <span>Personnel: {app.doctor}</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-3 mb-6">
-                                    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
-                                        <Clock size={18} className="text-slate-400" />
-                                        <span>{new Date(app.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })} at {app.time}</span>
+                                <div className="grid grid-cols-2 gap-6 mb-10 relative z-10">
+                                    <div className="p-6 bg-slate-50 dark:bg-white/[0.03] rounded-[2rem] border border-slate-100 dark:border-white/5 group-hover:border-indigo-500/10 transition-all">
+                                        <div className="flex items-center gap-2 mb-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            <Clock size={14} className="text-indigo-500" />
+                                            Schedule
+                                        </div>
+                                        <p className="text-sm font-black text-slate-900 dark:text-white uppercase leading-none">
+                                            {new Date(app.date).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
+                                        </p>
+                                        <p className="text-lg font-black text-indigo-600 mt-2">{app.time}</p>
                                     </div>
-                                    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
-                                        <MapPin size={18} className="text-slate-400" />
-                                        <span className="truncate">{app.location}</span>
+                                    <div className="p-6 bg-slate-50 dark:bg-white/[0.03] rounded-[2rem] border border-slate-100 dark:border-white/5 group-hover:border-indigo-500/10 transition-all">
+                                        <div className="flex items-center gap-2 mb-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            <MapPin size={14} className="text-indigo-500" />
+                                            Location
+                                        </div>
+                                        <p className="text-sm font-black text-slate-900 dark:text-white uppercase truncate leading-none">{app.location}</p>
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-2 uppercase tracking-widest">PHYSICAL WING</p>
                                     </div>
                                 </div>
 
                                 {app.notes && (
-                                    <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl mb-6">
-                                        <p className="text-sm text-slate-500 dark:text-slate-400 italic line-clamp-2">"{app.notes}"</p>
+                                    <div className="bg-indigo-50/30 dark:bg-indigo-500/5 p-6 rounded-[2rem] border border-indigo-100/20 dark:border-indigo-500/10 mb-10 relative z-10 flex-1">
+                                        <p className="text-xs text-slate-600 dark:text-slate-400 font-medium italic leading-relaxed">
+                                            <span className="text-indigo-500 not-italic font-black text-[10px] uppercase tracking-widest block mb-2 opacity-60">Clinical Directives:</span>
+                                            "{app.notes}"
+                                        </p>
                                     </div>
                                 )}
 
                                 <button
                                     onClick={() => addToGoogleCalendar(app)}
-                                    className="w-full flex items-center justify-center gap-2 py-3 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                                    className="w-full flex items-center justify-center gap-3 py-5 bg-slate-100 dark:bg-white/[0.05] text-slate-900 dark:text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 transition-all shadow-sm active:scale-95 group/btn"
                                 >
-                                    <ExternalLink size={16} />
-                                    Add to Google Calendar
+                                    <ExternalLink size={16} className="group-hover/btn:rotate-12 transition-transform" />
+                                    Synchronize Bio-Calendar
                                 </button>
                             </div>
                         ))}
@@ -142,96 +166,100 @@ const Appointments = () => {
                 )}
             </div>
 
-            {/* Schedule Modal */}
+            {/* Schedule Modal - Futuristic Glassmorphism */}
             {showModal && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up border border-slate-200 dark:border-slate-800">
-                        <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Schedule Appointment</h3>
-                            <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 transition-colors">
-                                <X size={24} />
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-xl animate-fade-in">
+                    <div className="bg-white dark:bg-slate-900 rounded-[4rem] shadow-3xl w-full max-w-2xl overflow-hidden animate-zoom-in border border-slate-100 dark:border-white/10">
+                        <div className="p-12 border-b border-slate-50 dark:border-white/5 flex justify-between items-center bg-slate-50/30 dark:bg-slate-800/20">
+                            <div>
+                                <h3 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">Protocol Initialization</h3>
+                                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.4em] mt-4 ml-1 flex items-center gap-3">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                    Personnel & Temporal Validation Required
+                                </p>
+                            </div>
+                            <button onClick={() => setShowModal(false)} className="p-4 bg-slate-100 dark:bg-white/5 hover:bg-rose-500 hover:text-white rounded-[1.5rem] text-slate-400 transition-all hover:rotate-90">
+                                <X size={28} />
                             </button>
                         </div>
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form onSubmit={handleSubmit} className="p-12 space-y-10">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Reason / Title</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1 block">Clinical Context / Purpose</label>
                                     <input
                                         type="text"
                                         name="title"
                                         value={formData.title}
                                         onChange={handleInputChange}
-                                        placeholder="e.g. Annual Checkup, Dental Cleaning"
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        placeholder="E.G. NEUROLOGICAL ASSESSMENT"
+                                        className="w-full px-8 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700"
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Doctor / Clinic</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1 block">Medical Personnel</label>
                                     <input
                                         type="text"
                                         name="doctor"
                                         value={formData.doctor}
                                         onChange={handleInputChange}
-                                        placeholder="Dr. Smith"
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        placeholder="DR. NAME"
+                                        className="w-full px-8 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white"
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Location</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1 block">Facility / Area</label>
                                     <input
                                         type="text"
                                         name="location"
                                         value={formData.location}
                                         onChange={handleInputChange}
-                                        placeholder="City Hospital"
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        placeholder="ZONE / WING"
+                                        className="w-full px-8 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Date</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1 block">Date Specification</label>
                                     <input
                                         type="date"
                                         name="date"
                                         value={formData.date}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        className="w-full px-8 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white"
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Time</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1 block">Time Marker</label>
                                     <input
                                         type="time"
                                         name="time"
                                         value={formData.time}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                        className="w-full px-8 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-sm dark:text-white"
                                         required
                                     />
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Notes (Optional)</label>
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1 block">Directives / Bio-Notes</label>
                                     <textarea
                                         name="notes"
                                         value={formData.notes}
                                         onChange={handleInputChange}
-                                        placeholder="Fasting required, bring old reports..."
+                                        placeholder="SPECIFY PROTOCOLS, FASTING, OR ARTIFACTS TO BRING..."
                                         rows="3"
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+                                        className="w-full px-8 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-sm dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 resize-none uppercase"
                                     ></textarea>
                                 </div>
                             </div>
 
-                            <div className="pt-4">
-                                <button
-                                    type="submit"
-                                    className="w-full bg-primary text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30"
-                                >
-                                    Confirm Appointment
-                                </button>
-                            </div>
+                            <button
+                                type="submit"
+                                className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-6 rounded-[2rem] font-black uppercase tracking-[0.4em] text-xs hover:bg-indigo-600 dark:hover:bg-indigo-500 hover:text-white transition-all shadow-3xl hover:scale-[1.02] active:scale-95 mt-4"
+                            >
+                                Finalize Timeline Synchronization
+                            </button>
                         </form>
                     </div>
                 </div>

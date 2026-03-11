@@ -1,76 +1,91 @@
 import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 const Logo = ({ className = "w-10 h-10" }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+
+    // Adaptive colors based on theme
+    const accentColor = "#2dd4bf"; // Teal - stays same for brand consistency
+    const primaryStroke = isDark ? "rgba(255,255,255,0.8)" : "rgba(15,23,42,0.8)"; // Slate 900 in light mode
+    const structureFill = isDark ? "rgba(255,255,255,0.05)" : "rgba(37,99,235,0.05)"; // Blue 600 tint in light mode
+    const detailStroke = isDark ? "rgba(255,255,255,0.2)" : "rgba(15,23,42,0.15)";
+
     return (
         <div className={`relative ${className}`}>
-            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-xl transition-transform hover:scale-105 duration-500">
-                {/* Shield with complex gradient */}
-                <path d="M256 40C256 40 100 80 100 220C100 360 256 460 256 460C256 460 412 360 412 220C412 80 256 40 256 40Z"
-                    fill="url(#shieldMain)"
-                    stroke="rgba(255,255,255,0.4)"
-                    strokeWidth="2" />
+            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-2xl transition-all duration-700 hover:rotate-[10deg] hover:scale-110">
+                {/* Main Hexagonal Container */}
+                <path
+                    d="M256 40L446.5 150V362L256 472L65.5 362V150L256 40Z"
+                    fill="url(#logoGradient)"
+                    stroke={primaryStroke}
+                    strokeWidth="2"
+                    strokeOpacity={isDark ? "0.1" : "0.2"}
+                />
 
-                {/* Background "M" Logo */}
-                <path d="M150 180L210 180L256 240L302 180L362 180L362 300L332 300L332 210L256 310L180 210L180 300L150 300Z"
-                    fill="white"
-                    opacity="0.1" />
+                {/* Secondary Inset Hexagon */}
+                <path
+                    d="M256 80L411.9 170V342L256 432L100.1 342V170L256 80Z"
+                    fill={structureFill}
+                    stroke={detailStroke}
+                    strokeWidth="2"
+                />
 
-                {/* Medical Human Figure (Line Art) */}
-                <g stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    {/* Head - Faceted Look */}
-                    <path d="M256 120 C270 120, 285 130, 285 155 C285 180, 270 190, 256 190 C242 190, 227 180, 227 155 C227 130, 242 120, 256 120 Z" fill="none" />
+                {/* Central Shield/V Shape */}
+                <path
+                    d="M256 160L340 210V300L256 350L172 300V210L256 160Z"
+                    fill={isDark ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.05)"}
+                    stroke={primaryStroke}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
 
-                    {/* Torso & Core */}
-                    <path d="M256 190 L256 320" />
-                    <path d="M220 205 Q256 195, 292 205" />
+                {/* The "V" highlight */}
+                <path
+                    d="M210 230L256 280L302 230"
+                    stroke={isDark ? "white" : "#1e40af"}
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
 
-                    {/* Arms - Detailed Segments */}
-                    <path d="M220 205 L180 260 L160 310" />
-                    <path d="M292 205 L332 260 L352 310" />
+                {/* Medical Cross Detail */}
+                <path
+                    d="M256 120V150M241 135H271"
+                    stroke={accentColor}
+                    strokeWidth="10"
+                    strokeLinecap="round"
+                />
 
-                    {/* Legs - Detailed Segments */}
-                    <path d="M256 320 L220 420" />
-                    <path d="M256 320 L292 420" />
-
-                    {/* Internal Structure Lines */}
-                    <path d="M240 220 L272 220" opacity="0.3" />
-                    <path d="M245 250 L267 250" opacity="0.3" />
-                    <path d="M230 350 L250 350" opacity="0.3" />
-                    <path d="M262 350 L282 350" opacity="0.3" />
+                {/* Digital Pulse Nodes */}
+                <g>
+                    <circle cx="256" cy="40" r="6" fill={accentColor}>
+                        <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="446.5" cy="150" r="4" fill={accentColor} opacity="0.6" />
+                    <circle cx="446.5" cy="362" r="4" fill={accentColor} opacity="0.6" />
+                    <circle cx="256" cy="472" r="6" fill={accentColor}>
+                        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="65.5" cy="362" r="4" fill={accentColor} opacity="0.6" />
+                    <circle cx="65.5" cy="150" r="4" fill={accentColor} opacity="0.6" />
                 </g>
 
-                {/* Document Icons around the body */}
-                <g fill="white" opacity="0.8">
-                    <rect x="135" y="160" width="30" height="40" rx="3" />
-                    <rect x="347" y="160" width="30" height="40" rx="3" />
-                    <rect x="236" y="240" width="40" height="50" rx="4" />
-                    <rect x="360" y="280" width="30" height="40" rx="3" />
-                </g>
-                <g stroke="#0891b2" strokeWidth="2">
-                    <path d="M142 175 H158 M142 185 H158" />
-                    <path d="M354 175 H370 M354 185 H370" />
-                    <path d="M245 260 H267 M245 275 H267" />
-                </g>
-
-                {/* Biometric Glowing Nodes */}
-                <circle cx="215" cy="240" r="4" fill="#22d3ee" className="animate-pulse">
-                    <animate attributeName="opacity" values="0.2;1;0.2" dur="2s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="297" cy="240" r="4" fill="#22d3ee">
-                    <animate attributeName="opacity" values="1;0.2;1" dur="2.5s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="256" cy="380" r="4" fill="#22d3ee">
-                    <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" />
-                </circle>
+                {/* Inner Glow Lines */}
+                <path d="M100 170L256 170" stroke={primaryStroke} strokeWidth="1" strokeOpacity="0.1" />
+                <path d="M412 170L256 170" stroke={primaryStroke} strokeWidth="1" strokeOpacity="0.1" />
+                <path d="M256 80L256 432" stroke={primaryStroke} strokeWidth="1" strokeOpacity="0.1" />
 
                 <defs>
-                    <linearGradient id="shieldMain" x1="256" y1="40" x2="256" y2="460" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stopColor="#99f6e4" />
-                        <stop offset="40%" stopColor="#2dd4bf" />
-                        <stop offset="100%" stopColor="#0d9488" />
+                    <linearGradient id="logoGradient" x1="65.5" y1="40" x2="446.5" y2="472" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#0ea5e9" />    {/* Sky 500 */}
+                        <stop offset="50%" stopColor="#2563eb" />   {/* Blue 600 */}
+                        <stop offset="100%" stopColor="#1e40af" />  {/* Blue 800 */}
                     </linearGradient>
+
                     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feGaussianBlur stdDeviation="5" result="blur" />
+                        <feGaussianBlur stdDeviation="15" result="blur" />
                         <feComposite in="SourceGraphic" in2="blur" operator="over" />
                     </filter>
                 </defs>
